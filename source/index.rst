@@ -19,20 +19,18 @@ Installation auf dem Server
 
 Voraussetzung für die Verwendung von linuxmuster-dehydrated ist, dass der linuxmuster-Server 
 aus dem Internet unter dem Servernamen, für den das Zertifikat erstellt werden soll auf Port 
-80 erreichbar ist. 
+80 erreichbar ist. Das Peket ist ab linxumuster 6.1 (babo) installierbar.
 
 Das Paket installiert ein Shellskript in /usr/sbin, erweitert dei Apache Konfiguration un die notwendige Einstellung, damit die ACME Challenges abgeschlossen werden können und richtet einen täglichen Cronjob ein, der das Zertifikat automatisch erneuert, bevor es abläuft.
 
 Paketinstallation
 -----------------
 
-Installieren Sie das Paket mit dem Befehl 
-
-Achtung: Das funktioniert derzeit noch nicht, das Paket muss im Forum heruntergeladen werden und mit
-``dpkg -i linuxmuster-dehydrated_0.2_all.deb`` installiert werden.
+Installieren Sie das Paket mit den Befehlen 
 
 .. code:: bash
-
+    
+    apt-get update
     apt-get install linuxmuster-dehydrated
 
 Konfiguration anpassen
@@ -69,7 +67,7 @@ Führen Sie den Befehl
     
     linuxmuster-dehydrated --register --accept-terms
 
-aus. Damit werden die Benutzungebedingungen von LetsEncrypt akzeptiert und ein Account erstellt, der für den Bezug der Zertifikate verwendet wird.
+aus. Damit werden die Nutzungsbedingungen von LetsEncrypt akzeptiert und ein Account erstellt, der für den Bezug der Zertifikate verwendet wird.
 
 Die Ausgabe auf der Konsole sollte in etwa so aussehen:
 
@@ -96,7 +94,7 @@ Führen Sie den Befehl
 
     linuxmuster-dehydrated --cron
 
-aus. Die Ausgabe aug der Konsole sollte etwa so aussehen:
+aus. Die Ausgabe auf der Konsole sollte etwa so aussehen:
 
 .. code:: bash
 
@@ -120,7 +118,7 @@ aus. Die Ausgabe aug der Konsole sollte etwa so aussehen:
     + Done!
     + Hook: Nothing to do...
 
-Das Zertifikat sollte sich nun im Verzeichnis ``/etc/linuxmuster-dehydrated/cert/<servername>/`` befinden:
+Das Zertifikat befindet sich jetzt im Verzeichnis ``/etc/linuxmuster-dehydrated/cert/<servername>/``:
 
 .. code:: bash
 
@@ -151,7 +149,7 @@ Bei linuxmuster.net befindet sich diese Konfiguration für gewöhnlich in der Da
     SSLCipherSuite          ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA
 
 
-Anschließend kann man den apachen neu starten ``/etc/init.d/apache2 restart``. Nun sollte das LetsEncrypt Zertifikat funktional seinen Dienst verrichten.
+Anschließend kann man den apache-Webserver neu starten ``/etc/init.d/apache2 restart``. Nun sollte das LetsEncrypt Zertifikat funktional seinen Dienst verrichten.
 
 
 Index 
