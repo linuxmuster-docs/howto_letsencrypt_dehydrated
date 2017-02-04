@@ -28,7 +28,8 @@ Paketinstallation
 
 Installieren Sie das Paket mit dem Befehl 
 
-Achtung: Das funktioniert derzeit noch nicht, das Paket muss im Forum heruntergeaden werden und mit ``dpkg -i -rw-r--r-- 1 frank users 17K 04.02.2017 18:07`` installiert werden.
+Achtung: Das funktioniert derzeit noch nicht, das Paket muss im Forum heruntergeladen werden und mit
+``dpkg -i linuxmuster-dehydrated_0.2_all.deb`` installiert werden.
 
 .. code:: bash
 
