@@ -9,7 +9,7 @@ letsencrypt für linuxmusternet einrichten
 Das Paket linuxmuster-dehydrated stellt eine Möglichkeit dar, einen linuxmuster.net Server
 auf einfache Weise mit einem LetsEncrypt SSL-Zertifikat zu versorgen.
 
-linuxmuster-dehydrated basiert auf dem Projekt `dehadrated von Lukas Schauer <https://github.com/lukas2511/dehydrated>`
+linuxmuster-dehydrated basiert auf dem Projekt `dehydrated von Lukas Schauer <https://github.com/lukas2511/dehydrated>`
 
 Das vorliegende Dokument erläutert die Einrichtung von linuxmuster-dehydrated. 
 
@@ -18,10 +18,10 @@ Installation auf dem Server
 ===========================
 
 Voraussetzung für die Verwendung von linuxmuster-dehydrated ist, dass der linuxmuster-Server 
-aus dem Internet unter dem Servernamen, für den das Zertifikat erstellt werden soll auf Port 
-80 erreichbar ist. Das Peket ist ab linxumuster 6.1 (babo) installierbar.
+aus dem Internet unter dem Servernamen, für den das Zertifikat erstellt werden soll, auf Port 
+80 erreichbar ist. Das Paket ist ab linxumuster 6.1 (babo) installierbar.
 
-Das Paket installiert ein Shellskript in /usr/sbin, erweitert dei Apache Konfiguration un die notwendige Einstellung, damit die ACME Challenges abgeschlossen werden können und richtet einen täglichen Cronjob ein, der das Zertifikat automatisch erneuert, bevor es abläuft.
+Das Paket installiert ein Shellskript in /usr/sbin, erweitert die Apache Konfiguration um die notwendige Einstellung, damit die ACME Challenges abgeschlossen werden können und richtet einen täglichen Cronjob ein, der die Gültigkeit des Zertifikats prüft und gegebenenfalls das Zertifikat automatisch erneuert, bevor es abläuft.
 
 Paketinstallation
 -----------------
@@ -69,9 +69,10 @@ Führen Sie den Befehl
 
 aus. Damit werden die Nutzungsbedingungen von LetsEncrypt akzeptiert und ein Account erstellt, der für den Bezug der Zertifikate verwendet wird.
 
-Die Ausgabe auf der Konsole sollte in etwa so aussehen:
+Die Ausgabe auf der Konsole sieht in etwa so aus:
 
 .. code:: bash
+
     17:38/0 august /etc/linuxmuster-dehydrated # linuxmuster-dehydrated --register --accept-terms
     # INFO: Using main config file /etc/linuxmuster-dehydrated/config
     + Generating account key...
