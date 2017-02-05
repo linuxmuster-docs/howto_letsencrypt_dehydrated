@@ -160,7 +160,7 @@ Environment (ACME)" um zu überprüfen, ob derjenige, der ein Zertifikat
 für eine Domain/einen Host anfordert diesen auch tatsächlich kontrolliert.
 
 "dehydrated" ist eine Implementation dieses Verfahrens in einem bash-Skript, derzeit kann ACME mit
-dehydratet ausschließlich mit http auf Port 80 abgewickelt werden (siehe
+dehydrated ausschließlich mit http auf Port 80 abgewickelt werden (siehe
 auch https://github.com/lukas2511/dehydrated/issues/271).
 
 
