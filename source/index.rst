@@ -152,6 +152,46 @@ Bei linuxmuster.net befindet sich diese Konfiguration für gewöhnlich in der Da
 
 Anschließend kann man den apache-Webserver neu starten ``/etc/init.d/apache2 restart``. Nun sollte das LetsEncrypt Zertifikat funktional seinen Dienst verrichten.
 
+Technische Informationen
+------------------------
+
+LetsEncrypt verwendet das Verfahren "Automatic Certificate Management
+Environment (ACME)" um zu überprüfen, ob djenige, der ein Zertifikat
+für eine Domain/einen Host anfordert diesen auch tatsächlich kontrollier
+
+"dehydrated" ist eine Implementation dieses Verfahrens in einem bash-Skript, derzeit kann ACME mit
+dehydratet ausschließlich mit http auf Port 80 abgewickelt werden (siehe
+auch https://github.com/lukas2511/dehydrated/issues/271).
+
+
+Aus diesem Grund muss der Server zwingend aus dem Internet auf Port 80 erreichbar sein, 
+insbesondere muss auf der linuxmuster.net-Firewall eine entsprechende Weiterleitung 
+eingerichtet sein (und auch alle vorgelagerten Instanzen, z.B. Belwue , müssen den 
+Zugriff auf Port 80 gestatten).
+
+Das bedeutet jedoch nicht, dass der linuxmuster.net Server seine weiteren Dienste 
+über http anbieten muss. Eine Möglichkeit, alle Dienste des Servers ausschleßlich 
+per https anzubieten ist, eine permanente Weiterleitung in der für Port 80 zuständigen 
+Sektion der site-Konfiguration einzurichten:
+
+.. code:: bash
+
+    <VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+
+        DocumentRoot /var/www/
+
+        # IMMER Umleitung auf SSL
+        Redirect permanent / https://name.ihre-domain.de/
+
+        ErrorLog /var/log/apache2/error.log
+        CustomLog /var/log/apache2/access.log combined
+        ServerSignature On
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+    </VirtualHost>
+
 
 Index 
 -----
