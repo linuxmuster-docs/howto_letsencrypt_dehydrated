@@ -156,8 +156,8 @@ Technische Informationen
 ------------------------
 
 LetsEncrypt verwendet das Verfahren "Automatic Certificate Management
-Environment (ACME)" um zu überprüfen, ob djenige, der ein Zertifikat
-für eine Domain/einen Host anfordert diesen auch tatsächlich kontrollier
+Environment (ACME)" um zu überprüfen, ob derjenige, der ein Zertifikat
+für eine Domain/einen Host anfordert diesen auch tatsächlich kontrolliert.
 
 "dehydrated" ist eine Implementation dieses Verfahrens in einem bash-Skript, derzeit kann ACME mit
 dehydratet ausschließlich mit http auf Port 80 abgewickelt werden (siehe
@@ -166,11 +166,11 @@ auch https://github.com/lukas2511/dehydrated/issues/271).
 
 Aus diesem Grund muss der Server zwingend aus dem Internet auf Port 80 erreichbar sein, 
 insbesondere muss auf der linuxmuster.net-Firewall eine entsprechende Weiterleitung 
-eingerichtet sein (und auch alle vorgelagerten Instanzen, z.B. Belwue , müssen den 
-Zugriff auf Port 80 gestatten).
+eingerichtet sein. Auch alle vorgelagerten Instanzen, z.B. Belwue , müssen den 
+Zugriff auf Port 80 gestatten.
 
 Das bedeutet jedoch nicht, dass der linuxmuster.net Server seine weiteren Dienste 
-über http anbieten muss. Eine Möglichkeit, alle Dienste des Servers ausschleßlich 
+über http anbieten muss. Eine Möglichkeit, alle Dienste des Servers ausschließlich 
 per https anzubieten ist, eine permanente Weiterleitung in der für Port 80 zuständigen 
 Sektion der site-Konfiguration einzurichten:
 
