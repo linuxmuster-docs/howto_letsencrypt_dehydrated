@@ -119,7 +119,7 @@ aus. Die Ausgabe auf der Konsole sollte etwa so aussehen:
     + Done!
     + Hook: Nothing to do...
 
-Das Zertifikat befindet sich jetzt im Verzeichnis ``/etc/linuxmuster-dehydrated/cert/<servername>/``:
+Das Zertifikat befindet sich jetzt im Verzeichnis ``/etc/linuxmuster-dehydrated/certs/<servername>/``:
 
 .. code:: bash
 
