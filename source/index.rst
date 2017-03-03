@@ -4,37 +4,50 @@
    contain the root `toctree` directive.
 
 letsencrypt für linuxmusternet einrichten
-==========================================
+=========================================
 
-Das Paket linuxmuster-dehydrated stellt eine Möglichkeit dar, einen linuxmuster.net Server
-auf einfache Weise mit einem LetsEncrypt SSL-Zertifikat zu versorgen.
+Das Paket *linuxmuster-dehydrated* stellt eine Möglichkeit dar, einen linuxmuster.net Server
+auf einfache Weise mit einem LetsEncrypt SSL-Zertifikat zu versorgen. Es ist ab linxumuster 6.1 (babo) installierbar.
 
-linuxmuster-dehydrated basiert auf dem Projekt `dehydrated von Lukas Schauer <https://github.com/lukas2511/dehydrated>`
+*linuxmuster-dehydrated* basiert auf dem Projekt `dehydrated von Lukas Schauer <https://github.com/lukas2511/dehydrated>`_
 
-Das vorliegende Dokument erläutert die Einrichtung von linuxmuster-dehydrated. 
+Das vorliegende Dokument erläutert die Einrichtung von *linuxmuster-dehydrated*. 
 
-
-Installation auf dem Server
-===========================
+Vorbereitung auf dem IPFire
+---------------------------
 
 Voraussetzung für die Verwendung von linuxmuster-dehydrated ist, dass der linuxmuster-Server 
 aus dem Internet unter dem Servernamen, für den das Zertifikat erstellt werden soll, auf Port 
-80 erreichbar ist. Das Paket ist ab linxumuster 6.1 (babo) installierbar.
+80 erreichbar ist. 
+
+Melden Sie sich am IPFire an, kopieren Sie die Zeile, die SSH -> Server (meist Zeile 1) und passen Sie das Protokoll auf 80 an:
+
+.. image:: media/ipfire-port80.png
+
+.. image:: media/ipfire-port80-2.png
+
+Schließen Sie die Änderung ab, in dem Sie auf "Änderungen übernehmen" klicken.
+	   
+.. image:: media/ipfire-port80-3.png
+
+
+Installation auf dem Server
+---------------------------
 
 Das Paket installiert ein Shellskript in /usr/sbin, erweitert die Apache Konfiguration um die notwendige Einstellung, damit die ACME Challenges abgeschlossen werden können und richtet einen täglichen Cronjob ein, der die Gültigkeit des Zertifikats prüft und gegebenenfalls das Zertifikat automatisch erneuert, bevor es abläuft.
 
 Paketinstallation
------------------
+~~~~~~~~~~~~~~~~~
 
 Installieren Sie das Paket mit den Befehlen 
 
 .. code:: bash
     
-    apt-get update
-    apt-get install linuxmuster-dehydrated
+   # apt-get update
+   # apt-get install linuxmuster-dehydrated
 
 Konfiguration anpassen
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 Editieren Sie im Verzeichnis ``/etc/linuxmuster-dehydrated`` die Dateien 
 ``config`` sowie ``domains.txt``
@@ -43,67 +56,67 @@ In der Datei ``config`` tragen Sie eine gültige Mailadresse ein und entfernen d
 
 .. code:: bash
 
-    # E-mail to use during the registration (default: <unset>)
-    CONTACT_EMAIL=webmaster@ihre-domain.de
+   # E-mail to use during the registration (default: <unset>)
+   CONTACT_EMAIL=webmaster@ihre-domain.de
 
 In der Datei ``domains.txt`` tragen Sie den Hostnamen ein, unter dem der linuxmuster.net Server 
 vom Internet aus auf Port 80 erreichbar ist:
 
 .. code:: bash
 
-    # Hier muss der Servername eingetragen werden,
-    # unter dem  der linuxmuster.net Server aus
-    # dem Internet unter Port 80 erreichbar ist.
+   # Hier muss der Servername eingetragen werden,
+   # unter dem  der linuxmuster.net Server aus
+   # dem Internet unter Port 80 erreichbar ist.
     
-    server.ihre-domain.de
+   server.ihre-domain.de
 
 
 Bei Letsencrypt anmelden
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Führen Sie den Befehl 
 
-.. code:: bash
+.. code-block:: console
     
-    linuxmuster-dehydrated --register --accept-terms
+   # linuxmuster-dehydrated --register --accept-terms
 
 aus. Damit werden die Nutzungsbedingungen von LetsEncrypt akzeptiert und ein Account erstellt, der für den Bezug der Zertifikate verwendet wird.
 
 Die Ausgabe auf der Konsole sieht in etwa so aus:
 
-.. code:: bash
+.. code-block:: console
 
-    17:38/0 august /etc/linuxmuster-dehydrated # linuxmuster-dehydrated --register --accept-terms
-    # INFO: Using main config file /etc/linuxmuster-dehydrated/config
-    + Generating account key...
-    + Registering account key with ACME server..... 
+   17:38/0 august /etc/linuxmuster-dehydrated # linuxmuster-dehydrated --register --accept-terms
+   # INFO: Using main config file /etc/linuxmuster-dehydrated/config
+   + Generating account key...
+   + Registering account key with ACME server..... 
 
 Anschließend sollte es außerdem ein Verzeichnis ``/etc/linuxmuster-dehydrated/accounts`` geben:
 
-.. code:: bash
+.. code-block:: console
 
-    # ls /etc/linuxmuster-dehydrated/accounts
-    aHR0xxxxxxxxxxxxxYwMS5hcGkubGV0c2VuY3J5cHQub3JnL2YYYYYYYYYYYYY
+   # ls /etc/linuxmuster-dehydrated/accounts
+   aHR0xxxxxxxxxxxxxYwMS5hcGkubGV0c2VuY3J5cHQub3JnL2YYYYYYYYYYYYY
 
 
-Zertifikat anfordern 
---------------------
+Zertifikat anfordern
+~~~~~~~~~~~~~~~~~~~~
 
 Führen Sie den Befehl 
 
-.. code:: bash
+.. code-block:: console
 
-    linuxmuster-dehydrated --cron
+   # linuxmuster-dehydrated --cron
 
-aus. Die Ausgabe auf der Konsole sollte etwa so aussehen:
+aus. Die erfolgreiche Ausgabe auf der Konsole sollte etwa so aussehen:
 
-.. code:: bash
+.. code-block:: console
 
-    # linuxmuster-dehydrated --cron
-    # INFO: Using main config file /etc/linuxmuster-dehydrated/config
-    Processing august.qg-moessingen.de
-     + Signing domains...
-     + Generating private key...
+   # linuxmuster-dehydrated --cron
+   # INFO: Using main config file /etc/linuxmuster-dehydrated/config
+   Processing august.qg-moessingen.de
+    + Signing domains...
+    + Generating private key...
     + Generating signing request...
     + Requesting challenge for august.qg-moessingen.de...
     + Hook: Nothing to do...
@@ -121,15 +134,15 @@ aus. Die Ausgabe auf der Konsole sollte etwa so aussehen:
 
 Das Zertifikat befindet sich jetzt im Verzeichnis ``/etc/linuxmuster-dehydrated/certs/<servername>/``:
 
-.. code:: bash
+.. code-block:: console
 
-    # ls /etc/linuxmuster-dehydrated/certs/august.qg-moessingen.de/
-    cert-1486226502.csr  cert-1486226528.csr  cert.csr  chain-1486226528.pem  fullchain-1486226528.pem  privkey-1486226502.pem  privkey.pem
-    cert-1486226502.pem  cert-1486226528.pem  cert.pem  chain.pem             fullchain.pem             privkey-1486226528.pem
+   # ls /etc/linuxmuster-dehydrated/certs/august.qg-moessingen.de/
+   cert-1486226502.csr  cert-1486226528.csr  cert.csr  chain-1486226528.pem  fullchain-1486226528.pem  privkey-1486226502.pem  privkey.pem
+   cert-1486226502.pem  cert-1486226528.pem  cert.pem  chain.pem             fullchain.pem             privkey-1486226528.pem
 
 
 Einstellungen in der apache-Konfiguration
------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Im Abschnitt der Apache-Konfiguration, in dem der SSL VHost konfiguriert ist, muss nun die folgende Zertifikatskette eingetragen werden. 
 Bei linuxmuster.net befindet sich diese Konfiguration für gewöhnlich in der Datei ``/etc/apache2/sites-enabled/000-default``.
@@ -166,7 +179,7 @@ auch https://github.com/lukas2511/dehydrated/issues/271).
 
 Aus diesem Grund muss der Server zwingend aus dem Internet auf Port 80 erreichbar sein, 
 insbesondere muss auf der linuxmuster.net-Firewall eine entsprechende Weiterleitung 
-eingerichtet sein. Auch alle vorgelagerten Instanzen, z.B. Belwue , müssen den 
+eingerichtet sein. Auch alle vorgelagerten Instanzen, z.B. Belwue, müssen den 
 Zugriff auf Port 80 gestatten.
 
 Das bedeutet jedoch nicht, dass der linuxmuster.net Server seine weiteren Dienste 
@@ -192,10 +205,4 @@ Sektion der site-Konfiguration einzurichten:
         LogLevel warn
     </VirtualHost>
 
-
-Index 
------
-
-* :ref:`genindex`
-* :ref:`search`
-
+	  
