@@ -34,14 +34,14 @@ Schließen Sie die Änderung ab, in dem Sie auf "Änderungen übernehmen" klicke
 Installation auf dem Server
 ---------------------------
 
-Das Paket installiert ein Shellskript in /usr/sbin, erweitert die Apache Konfiguration um die notwendige Einstellung, damit die ACME Challenges abgeschlossen werden können und richtet einen täglichen Cronjob ein, der die Gültigkeit des Zertifikats prüft und gegebenenfalls das Zertifikat automatisch erneuert, bevor es abläuft.
+Das Paket installiert ein Shellskript in /usr/sbin, erweitert die Apache Konfiguration um die notwendige Einstellung, damit die ACME Challenges abgeschlossen werden können, richtet einen täglichen Cronjob ein, der die Gültigkeit des Zertifikats prüft und gegebenenfalls das Zertifikat automatisch erneuert, bevor es abläuft, kopiert das Zertifikat (mit Backup) an die richtige Stelle auf dem Server und startet die Services für www, ldap und imap/pop neu.
 
 Paketinstallation
 ~~~~~~~~~~~~~~~~~
 
 Installieren Sie das Paket mit den Befehlen 
 
-.. code:: bash
+.. code-block:: console
     
    # apt-get update
    # apt-get install linuxmuster-dehydrated
@@ -140,30 +140,35 @@ Das Zertifikat befindet sich jetzt im Verzeichnis ``/etc/linuxmuster-dehydrated/
    cert-1486226502.csr  cert-1486226528.csr  cert.csr  chain-1486226528.pem  fullchain-1486226528.pem  privkey-1486226502.pem  privkey.pem
    cert-1486226502.pem  cert-1486226528.pem  cert.pem  chain.pem             fullchain.pem             privkey-1486226528.pem
 
+Darüberhinaus wurde das Zertifikat inklusive der Zertifikatskette an
+die wichtige Stelle ``/etc/ssl/private/server.pem`` kopiert. Der
+Webdienst, der LDAP-Dienst und der IMAP- und Pop3-Dienst wurden neu
+gestartet und verwenden ab sofort das neue Zertifikat.
 
-Einstellungen in der apache-Konfiguration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Im Abschnitt der Apache-Konfiguration, in dem der SSL VHost konfiguriert ist, muss nun die folgende Zertifikatskette eingetragen werden. 
-Bei linuxmuster.net befindet sich diese Konfiguration für gewöhnlich in der Datei ``/etc/apache2/sites-enabled/000-default``.
-
-.. code:: bash
-
-    SSLEngine On
-
-    # <servername> anpassen!
-    SSLCertificateFile     /etc/linuxmuster-dehydrated/certs/<servername>/cert.pem
-    SSLCertificateKeyFile  /etc/linuxmuster-dehydrated/certs/<servername>/privkey.pem
-    SSLCertificateChainFile    /etc/linuxmuster-dehydrated/certs/<servername>/chain.pem
-    SSLCACertificateFile    /etc/linuxmuster-dehydrated/certs/<servername>/fullchain.pem
-
-    # Diese Einstellungen sind optional, aber empfehlenswert
-    SSLProtocol             all -SSLv2 -SSLv3
-    SSLHonorCipherOrder     on
-    SSLCipherSuite          ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA
-
-
-Anschließend kann man den apache-Webserver neu starten ``/etc/init.d/apache2 restart``. Nun sollte das LetsEncrypt Zertifikat funktional seinen Dienst verrichten.
+..
+  Einstellungen in der apache-Konfiguration
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+  Im Abschnitt der Apache-Konfiguration, in dem der SSL VHost konfiguriert ist, muss nun die folgende Zertifikatskette eingetragen werden. 
+  Bei linuxmuster.net befindet sich diese Konfiguration für gewöhnlich in der Datei ``/etc/apache2/sites-enabled/000-default``.
+  
+  .. code:: bash
+  
+      SSLEngine On
+  
+      # <servername> anpassen!
+      SSLCertificateFile     /etc/linuxmuster-dehydrated/certs/<servername>/cert.pem
+      SSLCertificateKeyFile  /etc/linuxmuster-dehydrated/certs/<servername>/privkey.pem
+      SSLCertificateChainFile    /etc/linuxmuster-dehydrated/certs/<servername>/chain.pem
+      SSLCACertificateFile    /etc/linuxmuster-dehydrated/certs/<servername>/fullchain.pem
+  
+      # Diese Einstellungen sind optional, aber empfehlenswert
+      SSLProtocol             all -SSLv2 -SSLv3
+      SSLHonorCipherOrder     on
+      SSLCipherSuite          ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA
+  
+  
+  Anschließend kann man den apache-Webserver neu starten ``/etc/init.d/apache2 restart``. Nun sollte das LetsEncrypt Zertifikat funktional seinen Dienst verrichten.
 
 Technische Informationen
 ------------------------
@@ -177,10 +182,9 @@ dehydrated ausschließlich mit http auf Port 80 abgewickelt werden (siehe
 auch https://github.com/lukas2511/dehydrated/issues/271).
 
 
-Aus diesem Grund muss der Server zwingend aus dem Internet auf Port 80 erreichbar sein, 
-insbesondere muss auf der linuxmuster.net-Firewall eine entsprechende Weiterleitung 
-eingerichtet sein. Auch alle vorgelagerten Instanzen, z.B. Belwue, müssen den 
-Zugriff auf Port 80 gestatten.
+Aus diesem Grund muss der Server zwingend aus dem Internet auf Port 80
+erreichbar sein. Auch alle vorgelagerten Instanzen, z.B. Belwue,
+müssen den Zugriff auf Port 80 gestatten.
 
 Das bedeutet jedoch nicht, dass der linuxmuster.net Server seine weiteren Dienste 
 über http anbieten muss. Eine Möglichkeit, alle Dienste des Servers ausschließlich 
